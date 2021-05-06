@@ -1,0 +1,470 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>x2Polygons 0.0.5 &mdash; x2polygons 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Project Summary" href="project.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> x2polygons
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="project.html">Project Summary</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">x2Polygons 0.0.5</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">x2polygons</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>x2Polygons 0.0.5</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/code.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-__init__">
+<span id="x2polygons-0-0-5"></span><h1>x2Polygons 0.0.5<a class="headerlink" href="#module-__init__" title="Permalink to this headline">¶</a></h1>
+<p>This module calculates the distance between two matching polygons, such as building footprints. Package name is: x2polygons and can be downloaded from <a class="reference external" href="https://pypi.org/project/x2polygons/">PyPi</a>.</p>
+<p>Download the package:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install x2polygons
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Use cases:</dt><dd><p>This module could be used to compare reference building datasets with
+VGI datasets such as OSM.</p>
+</dd>
+<dt>Distance Functions:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Chamfer</span> <span class="pre">Distance</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Hausdorff</span> <span class="pre">Distance</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PoLis</span> <span class="pre">Distance</span></code> <a class="reference external" href="https://ieeexplore.ieee.org/document/6849454">[1]</a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Turn</span> <span class="pre">Function</span> <span class="pre">Distance</span></code> <a class="reference external" href="https://ieeexplore.ieee.org/document/75509">[2]</a>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt id="init__.chamfer_distance">
+<span id="__init__.chamfer_distance"></span><code class="sig-prename descclassname">__init__.</code><code class="sig-name descname">chamfer_distance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">polygon_a</span></em>, <em class="sig-param"><span class="n">polygon_b</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#init__.chamfer_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identifies the Chamfer distance between two input polygons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>polygon_a</strong> (<em>polygon</em>) – The first polygon</p></li>
+<li><p><strong>polygon_b</strong> (<em>polygon</em>) – The second polygon</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Chamfer distance between the poygons</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>distance (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="init__.distance_between_turn_functions">
+<span id="__init__.distance_between_turn_functions"></span><code class="sig-prename descclassname">__init__.</code><code class="sig-name descname">distance_between_turn_functions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a_turn</span></em>, <em class="sig-param"><span class="n">b_turn</span></em><span class="sig-paren">)</span><a class="headerlink" href="#init__.distance_between_turn_functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the distance between two turn functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a_turn</strong> (<em>dict</em>) – The turn dictionary of polygon_a.</p></li>
+<li><p><strong>b_turn</strong> (<em>dict</em>) – The turn dictionary of polygon_b.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>dictionary containing the following attributes</dt><dd><ul class="simple">
+<li><p>a (dict): the aligned turn function of polygon a</p></li>
+<li><p>b (dict): the aligned turn function of polygon b</p></li>
+<li><p>distance</p></li>
+<li><p>piece_wise_a (float []): the piece wise lengths of polygon a</p></li>
+<li><p>piece_wise_b (float []): the piece wise lengths of polygon b</p></li>
+<li><p>combined_piece_wise (float []): combined piece wise lengths of two polygons</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="init__.hausdorff_distance">
+<span id="__init__.hausdorff_distance"></span><code class="sig-prename descclassname">__init__.</code><code class="sig-name descname">hausdorff_distance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">polygon_a</span></em>, <em class="sig-param"><span class="n">polygon_b</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#init__.hausdorff_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identifies the Hausdorff distance between two input polygons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>polygon_a</strong> (<em>polygon</em>) – The first polygon</p></li>
+<li><p><strong>polygon_b</strong> (<em>polygon</em>) – The second polygon</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Hausdorff distance between the poygons</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>distance (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="init__.line_vector">
+<span id="__init__.line_vector"></span><em class="property">class </em><code class="sig-prename descclassname">__init__.</code><code class="sig-name descname">line_vector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p1</span></em>, <em class="sig-param"><span class="n">p2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#init__.line_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class to represent a line vector composed of two points.</p>
+<dl class="py attribute">
+<dt id="init__.line_vector.p1">
+<span id="__init__.line_vector.p1"></span><code class="sig-name descname">p1</code><a class="headerlink" href="#init__.line_vector.p1" title="Permalink to this definition">¶</a></dt>
+<dd><p>The start point of the vector</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#init__.point" title="__init__.point">point</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="init__.line_vector.p2">
+<span id="__init__.line_vector.p2"></span><code class="sig-name descname">p2</code><a class="headerlink" href="#init__.line_vector.p2" title="Permalink to this definition">¶</a></dt>
+<dd><p>The end point of the vector</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#init__.point" title="__init__.point">point</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="init__.line_vector.angle_to_vector">
+<span id="__init__.line_vector.angle_to_vector"></span><code class="sig-name descname">angle_to_vector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#init__.line_vector.angle_to_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identifies the angle between the vector and the vector vx in degrees.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>vx</strong> (<a class="reference internal" href="#init__.line_vector" title="__init__.line_vector"><em>line_vector</em></a>) – query vector</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The degree between the self vector and the query vector vx.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>degree (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="init__.line_vector.point_on_where">
+<span id="__init__.line_vector.point_on_where"></span><code class="sig-name descname">point_on_where</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">px</span></em><span class="sig-paren">)</span><a class="headerlink" href="#init__.line_vector.point_on_where" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identifies the orientation of the point px with respect to the vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>px</strong> (<a class="reference internal" href="#init__.point" title="__init__.point"><em>point</em></a>) – query point</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>‘LEFT’, ‘RIGHT’ or ‘COLINEAR’</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>orientation (str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="init__.plot_turn_function">
+<span id="__init__.plot_turn_function"></span><code class="sig-prename descclassname">__init__.</code><code class="sig-name descname">plot_turn_function</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">turn</span></em><span class="sig-paren">)</span><a class="headerlink" href="#init__.plot_turn_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the cumulative length turn function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>turn</strong> (<em>dict</em>) – The turn dictionary of a polygon.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>plot</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="init__.point">
+<span id="__init__.point"></span><em class="property">class </em><code class="sig-prename descclassname">__init__.</code><code class="sig-name descname">point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#init__.point" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class to represent a point.</p>
+<dl class="py attribute">
+<dt id="init__.point.x">
+<span id="__init__.point.x"></span><code class="sig-name descname">x</code><a class="headerlink" href="#init__.point.x" title="Permalink to this definition">¶</a></dt>
+<dd><p>The x coordinate of a point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="init__.point.y">
+<span id="__init__.point.y"></span><code class="sig-name descname">y</code><a class="headerlink" href="#init__.point.y" title="Permalink to this definition">¶</a></dt>
+<dd><p>The y coordinate of a point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="init__.point.distance_to_point">
+<span id="__init__.point.distance_to_point"></span><code class="sig-name descname">distance_to_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">px</span></em><span class="sig-paren">)</span><a class="headerlink" href="#init__.point.distance_to_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the distance from the point to another point px</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="init__.polis_distance">
+<span id="__init__.polis_distance"></span><code class="sig-prename descclassname">__init__.</code><code class="sig-name descname">polis_distance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">polygon_a</span></em>, <em class="sig-param"><span class="n">polygon_b</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#init__.polis_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identifies the PoLis distance between two input polygons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>polygon_a</strong> (<em>polygon</em>) – The first polygon</p></li>
+<li><p><strong>polygon_b</strong> (<em>polygon</em>) – The second polygon</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The PoLis distance between the poygons</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>distance (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="init__.polygon_vertices">
+<span id="__init__.polygon_vertices"></span><code class="sig-prename descclassname">__init__.</code><code class="sig-name descname">polygon_vertices</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">polygon</span></em><span class="sig-paren">)</span><a class="headerlink" href="#init__.polygon_vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts an input polygon into its nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>polygon</strong> (<em>polygon</em>) – A polygon object</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The ordered set of nodes of the input polygon</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>point_list (<a class="reference internal" href="#init__.point" title="__init__.point">point</a> [])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="init__.turn_function">
+<span id="__init__.turn_function"></span><code class="sig-prename descclassname">__init__.</code><code class="sig-name descname">turn_function</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">polygon</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#init__.turn_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identifies the Turn Function of an input polygon .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>polygon</strong> (<em>polygon</em>) – The input polygon</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>dictionary containing the following attributes</dt><dd><ul class="simple">
+<li><p>angles (float []): turn angles</p></li>
+<li><p>lengths (float []): normalised lengths</p></li>
+<li><p>direction (char []): each turn direction</p></li>
+<li><p>digitisation_direction (str): CCW or CW</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="project.html" class="btn btn-neutral float-left" title="Project Summary" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Berk Anbaroğlu.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
