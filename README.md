@@ -1,4 +1,4 @@
-# polygon2polygon-distance
+# x2polygons
 
 This Python package allows calculation of distance between two polygons. The available distance functions are:
 * Hausdorff distance
