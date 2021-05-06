@@ -18,7 +18,7 @@ with open('README.md') as f:
 
 setup(
   name='x2polygons',
-  version='0.0.4',
+  version='0.0.6',
   description='A package to find the distance between two polygons',
   long_description=long_description,
   long_description_content_type='text/markdown',  
@@ -30,5 +30,6 @@ setup(
   keywords=['GIS', 'spatial analysis'], 
   packages=find_packages(),
   install_requires=['matplotlib>=3.2.2', 
-                    'shapely>=1.7.1']
+                    'shapely>=1.7.1',
+                    'geopandas >= 0.0.1']
 )

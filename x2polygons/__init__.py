@@ -1,6 +1,5 @@
 """
 This module calculates the distance between two matching polygons, such as building footprints. Package name is: x2polygons and can be downloaded from `PyPi`_.
-Developed by the magnifieuq BANBAR
 Download the package::
     
     $ pip install x2polygons
