@@ -1,3 +1,4 @@
+import os
 from setuptools import setup, find_packages
  
 classifiers = [
@@ -16,9 +17,16 @@ classifiers = [
 with open('README.md') as f:
     long_description = f.read()
 
+# only specify install_requires if not in RTD environment
+if os.getenv("READTHEDOCS") == "True":
+    INSTALL_REQUIRES = []
+else:
+    with open("requirements.txt") as f:
+        INSTALL_REQUIRES = [line.strip() for line in f.readlines()]
+        
 setup(
   name='x2polygons',
-  version='0.0.6',
+  version='0.0.843',
   description='A package to find the distance between two polygons',
   long_description=long_description,
   long_description_content_type='text/markdown',  
@@ -28,8 +36,6 @@ setup(
   license='GNU General Public License v2.0', 
   classifiers=classifiers,
   keywords=['GIS', 'spatial analysis'], 
-  packages=find_packages(),
-  install_requires=['matplotlib>=3.2.2', 
-                    'shapely>=1.7.1',
-                    'geopandas >= 0.0.1']
+  packages=["x2polygons"],
+  install_requires=INSTALL_REQUIRES
 )

@@ -4,11 +4,21 @@ Created on Mon Mar 29 17:44:38 2021
 
 @author: banbar
 """
+# CMD: python -m unittest test.test_metrics
+
+import sys, os 
 
 
 import unittest
-from metrics import *
 
+
+testdir = os.path.dirname(__file__)
+srcdir = '../x2polygons'
+sys.path.insert(0, os.path.abspath(os.path.join(testdir, srcdir)))
+
+
+from distance_functions import *
+from plot import *
 
 # -------------------------------
 # 1.
@@ -47,6 +57,9 @@ class TestDistanceMetrics(unittest.TestCase):
         # Polygon 1: complex representation: different initial vertex & number of vertices
         self.p1_more_vertex_different_start = Polygon([(5,2), (5,3), (5, 5), (3, 5), (0, 5), (0, 0), (5, 0), (5, 1), (5,2)])
         
+        self.p1_extension_1m = Polygon([(0,0), (5,0), (5,6), (0,6), (0,0)])
+        self.p1_extension_1m_N_vertices = Polygon([(0,0), (5,0), (5,6), (4,6),(3,6), (2,6), (1,6), (0,6), (0,0)])
+        
         # Polygon 2: - notch included
         self.p2 = Polygon([(0, 0), (5, 0), (5, 5), (4, 5), (4, 6), (2, 6), (2, 5), (0, 5), (0, 0)])
         # Polygon 3 - triangular notch
@@ -56,6 +69,10 @@ class TestDistanceMetrics(unittest.TestCase):
         # Complex polygon
         self.p5 = Polygon([(3,2), (2,4), (0,4), (0,8), (7,8), (5,7), (7,4), (7,2), (3,2)])
         self.p5_different_start = Polygon([(7,8), (0,8), (0,4), (2,4), (3,2), (7,2), (7,4), (5,7), (7,8) ])
+        
+        self.p6 = Polygon([(1,1), (4,1), (6,3),  (8,5), (4,6), (8,8), (3,8), (2,7), (1,7), (1,1)])
+        self.p6_shifted = Polygon([(2,2), (5,2), (9,6), (5,7), (9,9), (4,9), (3,8), (2,8), (2,2)])
+        self.p6_kadir = Polygon([(2,7), (3,8), (8,8), (4,6), (8,5), (4,1), (1,1), (1,7), (2,7)])
         
         
     
@@ -77,15 +94,16 @@ class TestDistanceMetrics(unittest.TestCase):
         # self.assertEqual(hausdorff_distance(self.p1, self.p1_more_vertex_cw), 0)
         # self.assertEqual(hausdorff_distance(self.p1, self.p1_more_vertex_different_start), 0)
         
-        #self.assertEqual(hausdorff_distance(self.p1, self.p2, symmetrize="min"), 0)
-        
+        self.assertEqual(hausdorff_distance(self.p1, self.p2, symmetrise="min"), 0)
     
+
     def test_Polis(self):
         print("test Polis distance")
         
         self.assertEqual(polis_distance(self.p1, self.p1_more_vertex_cw), 0)
-        self.assertEqual(polis_distance(self.p1, self.p1_more_vertex_different_start), 0)
+        self.assertEqual(polis_distance(self.p1, self.p1_extension_1m_N_vertices, symmetrise = 'max'), 0.75)
         
+        self.assertEqual(polis_distance(self.p1_extension_1m, self.p1, symmetrise='min'), 0)
         
         # self.assertEqual(polis_distance(self.p1, self.p2), 0)
         # self.assertEqual(polis_distance(self.p2, self.p1), 20/8) #2.5
@@ -101,24 +119,31 @@ class TestDistanceMetrics(unittest.TestCase):
         #self.assertEquals(polis_distance(self.p1, self.p1_more_vertex), 0)
     
     def test_Turn_Function(self):
-        self.assertEqual(round(sum(turn_function(self.p1)["angles"])), 360)
-        self.assertEqual(round(sum(turn_function(self.p1_cw, ccw = True)["angles"])), 360)
-        self.assertEqual(round(sum(turn_function(self.p1_more_vertex)["angles"])), 360)
-        self.assertEqual(round(sum(turn_function(self.p1_more_vertex_cw)["angles"])), -360)
-        self.assertEqual(round(sum(turn_function(self.p1_more_vertex_different_start, ccw = True)["angles"])), 360)
+        # self.assertEqual(round(sum(turn_function(self.p1)["angles"])), 360)
+        # self.assertEqual(round(sum(turn_function(self.p1_cw, ccw = True)["angles"])), 360)
+        # self.assertEqual(round(sum(turn_function(self.p1_more_vertex)["angles"])), 360)
+        # self.assertEqual(round(sum(turn_function(self.p1_more_vertex_cw)["angles"])), -360)
+        # self.assertEqual(round(sum(turn_function(self.p1_more_vertex_different_start, ccw = True)["angles"])), 360)
         
         
-        self.assertEqual(round(sum(turn_function(self.p1, plot = True)["angles"])), 360)
-        self.assertEqual(round(sum(turn_function(self.p2, plot = True)["angles"])), 360)
+        # self.assertEqual(round(sum(turn_function(self.p1, plot = True)["angles"])), 360)
+        # self.assertEqual(round(sum(turn_function(self.p2, plot = True)["angles"])), 360)
+        
+        self.assertEqual(round(sum(turn_function(self.p6)["angles"])), 360)
+        self.assertEqual(round(sum(turn_function(self.p6_kadir, ccw = True)["angles"])), 360)
         
         
     def test_distance_between_turn_functions(self):
-        p1_turn = turn_function(self.p1, ccw = True)
-        p1_v2_turn = turn_function(self.p1_more_vertex_cw, ccw=True, plot=True )
+        # p1_turn = turn_function(self.p1, ccw = True)
+        # p1_v2_turn = turn_function(self.p1_more_vertex_cw, ccw=True, plot=True )
         # # p1_complex = turn_function(self.p1_more_vertex_different_start, ccw = True)
         # p2_turn = turn_function(self.p2, ccw = True)
-        self.assertEqual(distance_between_turn_functions(p1_turn, p1_v2_turn)["total_distance"], 0)
+        # self.assertEqual(distance_between_turn_functions(p1_turn, p1_v2_turn)["total_distance"], 0)
         
+        p6_turn = turn_function(self.p6, plot=True, ccw=True)
+        # p6_shifted_turn = turn_function(self.p6_shifted, ccw=True)
+        p6_kadir_turn = turn_function(self.p6_kadir, plot=True, ccw=True)
+        self.assertEqual(distance_between_turn_functions(p6_turn, p6_kadir_turn)["total_distance"], 0)
         
 if __name__ == '__main__':
     unittest.main()

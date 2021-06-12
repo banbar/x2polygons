@@ -12,3 +12,6 @@ sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-napoleon==0.7
 sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-serializinghtml==1.1.4
+matplotlib>=3.2.2
+shapely>=1.7.1
+geopandas >= 0.0.1
