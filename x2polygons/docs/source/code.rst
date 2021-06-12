@@ -1,5 +1,6 @@
-x2Polygons 0.0.5
-================
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
 
-.. automodule:: __init__
-   :members:
+   distance_functions
+   plot

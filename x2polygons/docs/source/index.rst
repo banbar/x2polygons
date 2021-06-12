@@ -11,10 +11,9 @@ This is the documentation of the x2polygons library developed in Python 3.
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-   
-   project
-   code
 
+   code_distance_functions
+   code_plot
 
 
 Indices and tables

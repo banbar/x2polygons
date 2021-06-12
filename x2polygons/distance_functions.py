@@ -24,7 +24,12 @@ import math
 import copy
 from shapely.geometry import Polygon, Point
 import geopandas as gp
-import plot
+
+# When packaging & developing:
+#from . import plot as plt
+
+# When creating the documentation
+import plot as plt
 
 
 def polygon_vertices(polygon):
@@ -492,7 +497,7 @@ def turn_function(polygon, **kwargs):
                     del turn["angles"][i]
     
     if ('plot' in kwargs):
-        plot_turn_function(turn)
+        plt.plot_turn_function(turn)
         
     return turn
 

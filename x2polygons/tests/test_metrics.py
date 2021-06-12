@@ -13,12 +13,11 @@ import unittest
 
 
 testdir = os.path.dirname(__file__)
-srcdir = '../x2polygons'
+srcdir = '../../'
 sys.path.insert(0, os.path.abspath(os.path.join(testdir, srcdir)))
 
-
-from distance_functions import *
-from plot import *
+from x2polygons.distance_functions import * 
+from x2polygons.plot import *
 
 # -------------------------------
 # 1.
