@@ -1,12 +1,9 @@
 """
-This module calculates the distance between two matching polygons, such as building footprints. Package name is: x2polygons and can be downloaded from `PyPi`_.
-Download the package::
-    
-    $ pip install x2polygons
+This module contains the functions to calculate the distance between two matching polygons (e.g. building footprints coming from two different datasets). 
 
 Use cases:
-    This module could be used to compare reference building datasets with 
-    VGI datasets such as OSM.
+    The functionaliyu presented in this module could be used to compare reference building datasets with 
+    a VGI dataset such as OSM.
     
 Distance Functions:
     - ``Chamfer Distance`` 
@@ -14,10 +11,7 @@ Distance Functions:
     - ``PoLis Distance`` `[1] <https://ieeexplore.ieee.org/document/6849454>`_.
     - ``Turn Function Distance`` `[2] <https://ieeexplore.ieee.org/document/75509>`_.
 
-.. _PyPi:
-    https://pypi.org/project/x2polygons/
-.. PoLis Distance:
-    https://github.com/
+
 """
 
 import math
@@ -26,10 +20,10 @@ from shapely.geometry import Polygon, Point
 import geopandas as gp
 
 # When packaging & developing:
-#from . import plot as plt
+from . import plot as plt
 
 # When creating the documentation
-import plot as plt
+#import plot as plt
 
 
 def polygon_vertices(polygon):
@@ -37,10 +31,10 @@ def polygon_vertices(polygon):
     Converts an input polygon into its nodes.
     
     Args:
-        polygon (polygon): A polygon object
+        - **polygon** (*polygon*): A polygon object
 
     Returns:
-        point_list (point []):  The ordered set of nodes of the input polygon
+        - **point_list** (*point []*):  The ordered set of nodes of the input polygon
     '''
     
     pointsx = list(list(polygon.exterior.coords.xy)[0]) # X-axis coordinates
@@ -54,17 +48,13 @@ class point:
     """
     A class to represent a point.
     
-    Attributes
-    ----------
-    x: float 
-        The x coordinate of a point
-    y: float
-        The y coordinate of a point
+    Args:
+        - **x** (*float*): The x coordinate of a point
+        - **y** (*float*): The y coordinate of a point
     
-    Methods
-    -------
-    distance_to_point(px)
-        Returns the distance from the point to another point px
+    Methods:
+        - **distance_to_point** (*px*): Returns the distance to the point *px*. 
+    
     """
     def __init__(self, x, y):
         self.x = x
@@ -78,13 +68,14 @@ class line_vector:
     """
     A class to represent a line vector composed of two points. 
     
+    Args:
+        - **p1** (*point*): Start point of the vector
+        - **p2** (*point*): End point of the vector
     
-    Attributes
-    ----------
-    p1: point 
-        The start point of the vector
-    p2: point
-        The end point of the vector
+    Methods:
+        - **point_on_where** (*px*): Identifies the orientation of the point px with respect to the vector. Returns 'LEFT', 'RIGHT' or 'COLINEAR'.
+        - ** length**: Returns the length of the vector
+        - **angle_to_vector** (*vx*): Returns the degree between the self vector and the query vector vx.
     
    
     """
@@ -94,17 +85,7 @@ class line_vector:
         self.p2 = p2
     
     def point_on_where(self, px): 
-        
-        '''
-        Identifies the orientation of the point px with respect to the vector. 
-        
-        Args:
-            px (point): query point
-        Returns:
-            orientation (str): 'LEFT', 'RIGHT' or 'COLINEAR'
-        '''
-
-        
+       
         # First vector is from p1 -> p2
         v1 = point(0, 0)
         v2 = point(0, 0)
@@ -130,14 +111,6 @@ class line_vector:
         return ( math.sqrt( (self.p2.x-self.p1.x)**2 + (self.p2.y-self.p1.y)**2 ) )
     
     def angle_to_vector(self, vx):
-        '''
-        Identifies the angle between the vector and the vector vx in degrees.
-        
-        Args:
-            vx (line_vector): query vector
-        Returns:
-            degree (float): The degree between the self vector and the query vector vx.
-        '''
 
         # https://onlinemschool.com/math/library/vector/angl/#:~:text=Definition.,Basic%20relation.
         cos_alpha = ( (self.p2.x-self.p1.x)*(vx.p2.x - vx.p1.x) + (self.p2.y-self.p1.y)*(vx.p2.y - vx.p1.y)) / (self.length()*vx.length()) 
@@ -149,14 +122,16 @@ class line_vector:
 
 def chamfer_distance(polygon_a, polygon_b, **kwargs):
     '''
-    Identifies the Chamfer distance between two input polygons. 
+    Identifies the Chamfer distance between two input polygons. The distance is calculated from *polygon_a* to *polygon_b* (a->b).
     
     Args:
-        polygon_a (polygon): The first polygon
-        polygon_b (polygon): The second polygon
-    
+        - **polygon_a** (*polygon*): First polygon
+        - **polygon_b** (*polygon*): Second polygon
+        - **kwargs**:
+            - symmetrise: How to symmetrise the distance measure as there would be two distances (i.e. a->b, b->a). Options are: *'min'*, *'max'*, *'vertices'*, *'average'*. The *vertices* option is described `here <https://ieeexplore.ieee.org/document/6849454>`_.
+            
     Returns:
-        distance (float): The Chamfer distance between the poygons
+        - **distance** (*float*): Chamfer distance between the polygons
     '''
     
     c_a_b = 0 # init the directed Chamfer Distance between polygon A and B
@@ -199,15 +174,17 @@ def chamfer_distance(polygon_a, polygon_b, **kwargs):
     
 def hausdorff_distance(polygon_a, polygon_b, **kwargs):
     '''
-    Identifies the Hausdorff distance between two input polygons. 
+    Identifies the Hausdorff distance between two input polygons. The distance is calculated from *polygon_a* to *polygon_b* (a->b).
     
     Args:
-        polygon_a (polygon): The first polygon
-        polygon_b (polygon): The second polygon
-    
+        - **polygon_a** (*polygon*): First polygon
+        - **polygon_b** (*polygon*): Second polygon
+        - **kwargs**:
+            - symmetrise: How to symmetrise the distance measure as there would be two distances (i.e. a->b, b->a). Options are: *'min'*, *'max'*, *'average'*. 
+            
     Returns:
-        distance (float): The Hausdorff distance between the poygons
-    '''    
+        - **distance** (*float*): Hausdorf distance between the polygons
+    '''
     
     distance_between_vertices = []
     
@@ -249,15 +226,17 @@ def hausdorff_distance(polygon_a, polygon_b, **kwargs):
 
 def polis_distance(polygon_a, polygon_b, **kwargs):
     '''
-    Identifies the PoLis distance between two input polygons. 
+    Identifies the PoLis distance between two input polygons. The distance is calculated from *polygon_a* to *polygon_b* (a->b).
     
     Args:
-        polygon_a (polygon): The first polygon
-        polygon_b (polygon): The second polygon
-    
+        - **polygon_a** (*polygon*): First polygon
+        - **polygon_b** (*polygon*): Second polygon
+        - **kwargs**:
+            - symmetrise: How to symmetrise the distance measure as there would be two distances (i.e. a->b, b->a). Options are: *'min'*, *'max'*, *'average'*. 
+            
     Returns:
-        distance (float): The PoLis distance between the poygons
-    '''  
+        - **distance** (*float*): PoLis distance between the polygons
+    '''
     geoSeriesA = gp.GeoSeries(polygon_a)
     geoSeriesB = gp.GeoSeries(polygon_b)
     # We can hold a VISITED polygon list - we can skip those to improve the run-time
@@ -310,28 +289,22 @@ def polis_distance(polygon_a, polygon_b, **kwargs):
 
 def turn_function(polygon, **kwargs):
     '''
-    Identifies the Turn Function of an input polygon . 
+    Identifies the turn function of an input polygon. 
     
     Args:
-        polygon (polygon): The input polygon
+        - **polygon** (*polygon*): The input polygon
     
     Returns:
-        dict: dictionary containing the following attributes
-            - angles (float []): turn angles 
-            - lengths (float []): normalised lengths
-            - direction (char []): each turn direction
-            - digitisation_direction (str): CCW or CW
+        - **dictionary** with the following attributes
+            - **angles** (*float []*): turn angles 
+            - **lengths** (*float []*): normalised lengths
+            - **direction** (*char []*): each turn direction - values of the list are Left (*l*), Right (*R*) or Colinear (*-*)
+            - **digitisation_direction** (*str*): Counter ClockWise (*CCW*) or ClockWise (*CW*)
+        - **kwargs**:
+            - **ccw**: Enforce a ccw turn (*True* or *False* (default))
+            - **plot**: Plot the turn function of the polygon (*True* or *False* (default))
     '''   
-    # Default kwargs:
-        #ccw = False
-        #plot = False
-    # Returns
-        # turn function as a dictionary
-            #angles: turn angles 
-            #lengths: normalised lengths 
-            #directions: turn directions - L, R or colinear (-) and 
-            #digitisation_direction: the original digitisation direction - CW or CCW
-    # Assume the initial vector between the first two points
+   
     tmp_points = polygon_vertices(polygon)
     points = []
     # save it as a point
@@ -508,17 +481,21 @@ def distance_between_turn_functions(a_turn, b_turn):
     Calculates the distance between two turn functions. 
     
     Args:
-        a_turn (dict): The turn dictionary of polygon_a.
-        b_turn (dict): The turn dictionary of polygon_b.
+        - **a_turn** (*dict*): First polygon's turn function as provided by the *turn_function(polygon_a)*.
+        - **b_turn** (*dict*): Second polygon's turn function as provided by the *turn_function(polygon_b)*.
     
     Returns:
-        dict: dictionary containing the following attributes
-            - a (dict): the aligned turn function of polygon a
-            - b (dict): the aligned turn function of polygon b
-            - distance
-            - piece_wise_a (float []): the piece wise lengths of polygon a
-            - piece_wise_b (float []): the piece wise lengths of polygon b
-            - combined_piece_wise (float []): combined piece wise lengths of two polygons
+        - **dict**: A dictionary containing the following attributes:
+            - **a** (*dict*): aligned turn function of polygon a
+            - **b** (*dict*): aligned turn function of polygon b
+            - **distance** (*float*): turn function distance between the polygons
+            - **piece_wise_a** (*float []*): piece wise lengths of polygon a
+            - **piece_wise_b** (*float []*): piece wise lengths of polygon b
+            - **combined_piece_wise** (*float []*): combined piece wise lengths of two polygons
+    Notes:
+        - Alignment step is carried out to make sure that the start point of the polygons do not make a difference.
+        
+        
 
     '''   
     # Notes:

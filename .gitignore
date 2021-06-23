@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#svg images
+*.svg
+
+# Python test files
+t1.py

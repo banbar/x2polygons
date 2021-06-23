@@ -12,8 +12,18 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../'))
+from pathlib import Path
 
+sys.path.insert(0, os.path.abspath('../../x2polygons'))
+
+# go up two levels from /docs/source to the package root
+#sys.path.insert(0, str(Path().resolve().parent.parent))
+
+# mock import these packages because readthedocs doesn't have them installed
+# autodoc_mock_imports = [
+#     "distance_functions",
+#     "plot",
+# ]
 
 # -- Project information -----------------------------------------------------
 
@@ -33,6 +43,9 @@ release = '0.0.1'
 extensions = ['sphinx.ext.autodoc',
               'sphinx_rtd_theme'
 ]
+
+# If we want to creat the documentation as in the source code and not alphabetically
+autodoc_member_order = 'bysource'
 
 # Napoleon settings
 napoleon_google_docstring = True

@@ -26,11 +26,11 @@ else:
         
 setup(
   name='x2polygons',
-  version='0.0.843',
+  version='0.0.12',
   description='A package to find the distance between two polygons',
   long_description=long_description,
   long_description_content_type='text/markdown',  
-  url='https://github.com/banbar/polygon2polygon-distance',  
+  url='https://github.com/banbar/x2polygons',  
   author='Berk Anbaroğlu',
   author_email='banbar@hacettepe.edu.tr',
   license='GNU General Public License v2.0', 
