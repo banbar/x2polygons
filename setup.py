@@ -26,7 +26,7 @@ else:
         
 setup(
   name='x2polygons',
-  version='0.0.12',
+  version='0.0.13',
   description='A package to find the distance between two polygons',
   long_description=long_description,
   long_description_content_type='text/markdown',  
@@ -36,6 +36,7 @@ setup(
   license='GNU General Public License v2.0', 
   classifiers=classifiers,
   keywords=['GIS', 'spatial analysis'], 
-  packages=["x2polygons"],
+  packages=["x2polygons",
+            "x2polygons.tests"],
   install_requires=INSTALL_REQUIRES
 )
