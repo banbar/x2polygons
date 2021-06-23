@@ -20,10 +20,10 @@ from shapely.geometry import Polygon, Point
 import geopandas as gp
 
 # When packaging & developing:
-from . import plot as plt
+#from . import plot as plt
 
 # When creating the documentation
-#import plot as plt
+import plot as plt
 
 
 def polygon_vertices(polygon):
