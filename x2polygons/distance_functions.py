@@ -20,10 +20,10 @@ from shapely.geometry import Polygon, Point
 import geopandas as gp
 
 # When packaging & developing:
-#from . import plot as plt
+from . import plot as plt
 
 # When creating the documentation
-import plot as plt
+#import plot as plt
 
 
 def polygon_vertices(polygon):
@@ -273,6 +273,9 @@ def polis_distance(polygon_a, polygon_b, **kwargs):
         distance_to_edges_b_a += dist[0]
     
     polis_b_a = distance_to_edges_b_a / num_vertices_b
+    
+    vertices_a = polygon_vertices(polygon_a)
+    vertices_b = polygon_vertices(polygon_b)
 
     # Calculate PoLiS
     # Default: polis_a_b (directed)
@@ -284,6 +287,10 @@ def polis_distance(polygon_a, polygon_b, **kwargs):
         return max(polis_a_b, polis_b_a)
     elif(kwargs['symmetrise'] == 'min'):
         return min(polis_a_b, polis_b_a)
+    elif(kwargs['symmetrise'] == 'vertices'):
+  
+        return ( (polis_a_b / (2* (len(vertices_a)-1)) ) + (polis_b_a / (2* (len(vertices_b)-1)) ) )
+    
 
 
 
@@ -670,7 +677,16 @@ def distance_between_turn_functions(a_turn, b_turn):
         
     
     return min_distance_snapshot
-    
 
+def turn_function_distance(p1, p2, **kwargs):
+    # Obtain the turn functions
+    if('ccw' in kwargs):
+        p1_turn = turn_function(p1, ccw = kwargs["ccw"])
+        p2_turn = turn_function(p2, ccw = kwargs["ccw"])
+    else:
+        p1_turn = turn_function(p1)
+        p2_turn = turn_function(p2)
+    
+    return distance_between_turn_functions(p1_turn, p2_turn)["distance"]
 
     
