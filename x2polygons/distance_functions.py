@@ -128,7 +128,7 @@ def chamfer_distance(polygon_a, polygon_b, **kwargs):
         - **polygon_a** (*polygon*): First polygon
         - **polygon_b** (*polygon*): Second polygon
         - **kwargs**:
-            - symmetrise: How to symmetrise the distance measure as there would be two distances (i.e. a->b, b->a). Options are: *'min'*, *'max'*, *'vertices'*, *'average'*. The *vertices* option is described `here <https://ieeexplore.ieee.org/document/6849454>`_.
+            - symmetrise: How to symmetrise the distance measure as there would be two distances (i.e. a->b, b->a). Options are: *'min'*, *'max'*, *'average'*. The *average* option is weighted by the number of nodes of each polygon as described `here <https://ieeexplore.ieee.org/document/6849454>`_.
             
     Returns:
         - **distance** (*float*): Chamfer distance between the polygons
@@ -140,7 +140,7 @@ def chamfer_distance(polygon_a, polygon_b, **kwargs):
     vertices_a = polygon_vertices(polygon_a)
     vertices_b = polygon_vertices(polygon_b)
     
-    for i in range(len(vertices_a)): # from each corner of the polygon 1
+    for i in range(len(vertices_a)-1): # from each corner of the polygon 1
         minimum_distance = 1000.0 # Minimum distance set as initial.
         for j in range(len(vertices_b)): # to each corner of the polygon 2
             distance = ((vertices_a[i][0] - vertices_b[j][0])**2+(vertices_a[i][1] - vertices_b[j][1])**2)**0.5 # The distance between corners is calculated
@@ -149,7 +149,7 @@ def chamfer_distance(polygon_a, polygon_b, **kwargs):
         c_a_b += minimum_distance # Add minimum distance to total distance
      
     
-    for k in range(len(vertices_b)): # from each corner of the polygon 2
+    for k in range(len(vertices_b)-1): # from each corner of the polygon 2
         minimum_distance = 1000.0 # Minimum distance set as initial.
         for l in range(len(vertices_a)): # to each corner of the polygon 2
             distance = ((vertices_a[l][0] - vertices_b[k][0])**2+(vertices_a[l][1] - vertices_b[k][1])**2)**0.5 # The distance between corners is calculated
@@ -160,10 +160,8 @@ def chamfer_distance(polygon_a, polygon_b, **kwargs):
     # Default: c_a_b
     if('symmetrise' not in kwargs):
         return c_a_b
-    elif(kwargs['symmetrise'] == 'vertices'):
-        return ( (c_a_b / (2* (len(vertices_a)-1)) ) + (c_b_a / (2* (len(vertices_b)-1)) ) )
     elif(kwargs['symmetrise'] == 'average'):
-        return (c_a_b + c_b_a) / 2
+        return ( (c_a_b / (2* (len(vertices_a)-1)) ) + (c_b_a / (2* (len(vertices_b)-1)) ) )
     elif(kwargs['symmetrise'] == 'min'):
         return min(c_a_b, c_b_a)
     elif(kwargs['symmetrise'] == 'max'):
@@ -287,9 +285,7 @@ def polis_distance(polygon_a, polygon_b, **kwargs):
         return max(polis_a_b, polis_b_a)
     elif(kwargs['symmetrise'] == 'min'):
         return min(polis_a_b, polis_b_a)
-    elif(kwargs['symmetrise'] == 'vertices'):
-  
-        return ( (polis_a_b / (2* (len(vertices_a)-1)) ) + (polis_b_a / (2* (len(vertices_b)-1)) ) )
+
     
 
 
