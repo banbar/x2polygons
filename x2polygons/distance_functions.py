@@ -2,7 +2,7 @@
 This module contains the functions to calculate the distance between two matching polygons (e.g. building footprints coming from two different datasets). 
 
 Use cases:
-    The functionaliyu presented in this module could be used to compare reference building datasets with 
+    The functionality presented in this module could be used to compare reference building datasets with 
     a VGI dataset such as OSM.
     
 Distance Functions:
@@ -10,7 +10,6 @@ Distance Functions:
     - ``Hausdorff Distance``
     - ``PoLis Distance`` `[1] <https://ieeexplore.ieee.org/document/6849454>`_.
     - ``Turn Function Distance`` `[2] <https://ieeexplore.ieee.org/document/75509>`_.
-    - ``Berk's web-site`` `[3] <https://geomatik.hacettepe.edu.tr>`_.
 
 
 """
