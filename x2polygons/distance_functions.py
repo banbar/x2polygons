@@ -10,6 +10,7 @@ Distance Functions:
     - ``Hausdorff Distance``
     - ``PoLis Distance`` `[1] <https://ieeexplore.ieee.org/document/6849454>`_.
     - ``Turn Function Distance`` `[2] <https://ieeexplore.ieee.org/document/75509>`_.
+    - ``Berk's web-site`` `[3] <https://geomatik.hacettepe.edu.tr>`_.
 
 
 """
@@ -20,10 +21,10 @@ from shapely.geometry import Polygon, Point
 import geopandas as gp
 
 # When packaging & developing:
-from . import plot as plt
+#from . import plot as plt
 
 # When creating the documentation
-#import plot as plt
+import plot as plt
 
 
 def polygon_vertices(polygon):
@@ -128,7 +129,7 @@ def chamfer_distance(polygon_a, polygon_b, **kwargs):
         - **polygon_a** (*polygon*): First polygon
         - **polygon_b** (*polygon*): Second polygon
         - **kwargs**:
-            - symmetrise: How to symmetrise the distance measure as there would be two distances (i.e. a->b, b->a). Options are: *'min'*, *'max'*, *'vertices'*, *'average'*. The *vertices* option is described `here <https://ieeexplore.ieee.org/document/6849454>`_.
+            - symmetrise: How to symmetrise the distance measure as there would be two distances (i.e. a->b, b->a). Options are: *'min'*, *'max'*, *'average'*. The *average* option is weighted by the number of nodes of each polygon as described `here <https://ieeexplore.ieee.org/document/6849454>`_.
             
     Returns:
         - **distance** (*float*): Chamfer distance between the polygons
@@ -140,7 +141,7 @@ def chamfer_distance(polygon_a, polygon_b, **kwargs):
     vertices_a = polygon_vertices(polygon_a)
     vertices_b = polygon_vertices(polygon_b)
     
-    for i in range(len(vertices_a)): # from each corner of the polygon 1
+    for i in range(len(vertices_a)-1): # from each corner of the polygon 1
         minimum_distance = 1000.0 # Minimum distance set as initial.
         for j in range(len(vertices_b)): # to each corner of the polygon 2
             distance = ((vertices_a[i][0] - vertices_b[j][0])**2+(vertices_a[i][1] - vertices_b[j][1])**2)**0.5 # The distance between corners is calculated
@@ -149,7 +150,7 @@ def chamfer_distance(polygon_a, polygon_b, **kwargs):
         c_a_b += minimum_distance # Add minimum distance to total distance
      
     
-    for k in range(len(vertices_b)): # from each corner of the polygon 2
+    for k in range(len(vertices_b)-1): # from each corner of the polygon 2
         minimum_distance = 1000.0 # Minimum distance set as initial.
         for l in range(len(vertices_a)): # to each corner of the polygon 2
             distance = ((vertices_a[l][0] - vertices_b[k][0])**2+(vertices_a[l][1] - vertices_b[k][1])**2)**0.5 # The distance between corners is calculated
@@ -160,10 +161,8 @@ def chamfer_distance(polygon_a, polygon_b, **kwargs):
     # Default: c_a_b
     if('symmetrise' not in kwargs):
         return c_a_b
-    elif(kwargs['symmetrise'] == 'vertices'):
-        return ( (c_a_b / (2* (len(vertices_a)-1)) ) + (c_b_a / (2* (len(vertices_b)-1)) ) )
     elif(kwargs['symmetrise'] == 'average'):
-        return (c_a_b + c_b_a) / 2
+        return ( (c_a_b / (2* (len(vertices_a)-1)) ) + (c_b_a / (2* (len(vertices_b)-1)) ) )
     elif(kwargs['symmetrise'] == 'min'):
         return min(c_a_b, c_b_a)
     elif(kwargs['symmetrise'] == 'max'):
@@ -287,9 +286,7 @@ def polis_distance(polygon_a, polygon_b, **kwargs):
         return max(polis_a_b, polis_b_a)
     elif(kwargs['symmetrise'] == 'min'):
         return min(polis_a_b, polis_b_a)
-    elif(kwargs['symmetrise'] == 'vertices'):
-  
-        return ( (polis_a_b / (2* (len(vertices_a)-1)) ) + (polis_b_a / (2* (len(vertices_b)-1)) ) )
+
     
 
 
@@ -651,19 +648,19 @@ def distance_between_turn_functions(a_turn, b_turn):
         b_turn["lengths"].append(length)
     
     # Calculate the total distance of the min_distance_snapshot
-    index_a = 0
-    index_b = 0
+    index_a = 1
+    index_b = 1
     total_distance = 0
     # remove the possibly repeating change points
     min_distance_snapshot["combined_piece_wise"] = sorted(set(min_distance_snapshot["combined_piece_wise"]))
     for i in range(1, (len(min_distance_snapshot["combined_piece_wise"]))):
         for j in range(index_a, len(min_distance_snapshot["piece_wise_a"])):
-                if(min_distance_snapshot["piece_wise_a"][j-1] < min_distance_snapshot["combined_piece_wise"][i] <= min_distance_snapshot["piece_wise_a"][j] ):
-                    # use j-1
-                    index_a = j-1
-                    break
+            if(min_distance_snapshot["piece_wise_a"][j-1] < min_distance_snapshot["combined_piece_wise"][i] <= min_distance_snapshot["piece_wise_a"][j] ):
+                # use j-1
+                index_a = j-1
+                break
             
-        for k in range(index_b, len(min_distance_snapshot["piece_wise_a"])):
+        for k in range(index_b, len(min_distance_snapshot["piece_wise_b"])):
             if(min_distance_snapshot["piece_wise_b"][k-1] < min_distance_snapshot["combined_piece_wise"][i] <= min_distance_snapshot["piece_wise_b"][k] ):
                 # use j-1
                 index_b = k-1
@@ -687,6 +684,6 @@ def turn_function_distance(p1, p2, **kwargs):
         p1_turn = turn_function(p1)
         p2_turn = turn_function(p2)
     
-    return distance_between_turn_functions(p1_turn, p2_turn)["distance"]
+    return distance_between_turn_functions(p1_turn, p2_turn)["total_distance"]
 
     
