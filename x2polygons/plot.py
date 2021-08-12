@@ -1,19 +1,51 @@
-""" This module contains all plot related functionality.
+""" 
+This module contains all plot related functionality. The functions under this module does not return any output, but only visualise a plot and/or save it on the hard disk.
+
+.. warning:: `Inkscape <https://inkscape.org/>`_ must be installed to export figures as an .emf file. 
+
+The functions rely on a default Inscape path (*C:/Program Files/Inkscape/bin/inkscape.exe*), which can be overridden by providing the path to the *inkscape* keyword argument. 
 """
 
 import matplotlib.pyplot as plt
 import subprocess, os
 
-def plot_turn_function(turn):  
+ # Export the output as emf
+def export_as_emf(fig, inkscape_path, file_path):
+    '''
+    Exports the current figure as an .emf file. 
+    
+    Args:
+        - **fig** (figure): The current figure (may be the turn function or polygons iteself)
+        - **inkscape_path** (str): The path to the Inkscape.exe.
+        - **file_path** (str): The path of the output .emf file. 
+        
+
+    '''
+      
+    path, filename = os.path.split(file_path)
+    filename, extension = os.path.splitext(filename)
+     
+    svg_filepath = os.path.join(path, filename+'.svg')
+    emf_filepath = os.path.join(path, filename+'.emf')
+     
+    fig.savefig(svg_filepath, format='svg')
+    subprocess.call([inkscape_path, svg_filepath, '--export-filename', emf_filepath])
+    os.remove(svg_filepath)
+
+def plot_turn_function(turn, **kwargs):  
     '''
     Plots the cumulative length turn function. 
     
     Args:
         - **turn** (*dict*): The turn dictionary of a polygon.
+        - **kwargs**:
+            - edge_labels: The edge labels would also be printed on the turn function to increase legibility. The first digitised node's label is assumed to be *a*, the second *b*, and so on.  A constant is used, *one_char_shift* that centers the label with respect to the turn functions edge.
+            - file_path: The turn function is saved as an .emf file to the designated *file_path*. Inkscpace is used to convert .svg to .emf. The path to Inkscape may require update.
+
+    '''
     
-    Returns:
-        - Plotted turn function 
-    '''   
+    fig, ax = plt.subplots()
+    
     # Plot the turn function
     cum_sum_lengths = [] + turn["lengths"] 
     cum_sum_angles = [] + turn["angles"]
@@ -39,9 +71,71 @@ def plot_turn_function(turn):
     
     
     plt.plot(piece_wise_lengths, piece_wise_angles)
-    plt.xlabel("Length of edges")
-    plt.ylabel("Turn angles")
+    plt.xlabel("Length of edges", fontsize=14)
+    plt.ylabel("Turn angles", fontsize=14)
+    
+    if('edge_labels' in kwargs):
+        # Plot the edge labels on top of the turn function
+        # First digitised node starts with a and then continues alphabetically
+        edge_labels = []
+        node_a = "b" # the next label
+        
+        for i in range(len(cum_sum_lengths)-2):
+            label = node_a + chr(ord(node_a) + 1)
+            if(i==0):
+                x = cum_sum_lengths[i] / 2
+            else:
+                x = ((cum_sum_lengths[i] - cum_sum_lengths[i-1])  / 2) + cum_sum_lengths[i-1]
+            
+            edge_labels.append([x, cum_sum_angles[i], label])
+        
+            # Prepare for the next edge
+            node_a = chr(ord(node_a) + 1)
+        
+        # Determine the label of the last edge and the first edge
+        # Last edge
+        last_edge_x = ((cum_sum_lengths[i+1] - cum_sum_lengths[i])  / 2) + cum_sum_lengths[i]
+        label = node_a + "a"
+        edge_labels.append([last_edge_x, cum_sum_angles[i+1], label])
+        # First edge
+        first_edge_x = ((cum_sum_lengths[i+2] - cum_sum_lengths[i+1])  / 2) + cum_sum_lengths[i+1]
+        label = "ab"
+        edge_labels.append([first_edge_x, cum_sum_angles[i+2], label])
+        
+    
+        # #override_labels in case of manual plotting
+        # edge_labels[0][2] = "gf"
+        # edge_labels[1][2] = "fe"
+        # edge_labels[2][2] = "ed"
+        # edge_labels[3][2] = "dc"
+        # edge_labels[4][2] = "cb"
+        # edge_labels[5][2] = "ba"
+        # edge_labels[6][2] = "ag"
+        
+        
+        # Print the edge labels
+        # Shift the x position a little towards left to center the piecewise unit - one character
+        one_char_shift = 0.03
+        for i in range(len(edge_labels)):
+            plt.text(edge_labels[i][0] - one_char_shift, edge_labels[i][1], edge_labels[i][2], fontsize=12)
+        
     plt.show()
+    
+    # Hide the right and top spines - better view
+    # REF: https://stackoverflow.com/questions/925024/how-can-i-remove-the-top-and-right-axis-in-matplotlib
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    
+    
+    
+    # Export the turn function as an emf file
+    if('file_path' in kwargs):
+        inkscape_path = kwargs.get('inkscape', "C://Program Files//Inkscape//bin//inkscape.exe")
+        file_path = kwargs.get('file_path', None)
+        
+        # Export the output as emf
+        export_as_emf(fig, inkscape_path, file_path)
+        
 
 def plot_polygon(poly_a):
     '''
@@ -79,14 +173,13 @@ def plot_x2polygons(poly_a, poly_b, **kwargs):
         - **poly_a** (*polygon*): First polygon
         - **poly_b** (*polygon*): Second polygon
         - *kwargs*: 
-            - **save_plot_as** (*str*): Output filename as svg
-    
-    Returns:
-        - Plot of the polygons
-        
+            - **file_path** (*str*): Output path of the output .emf file. 
+            - **with_node_labels**: If the node labels with their coordinates are to displayed, the user is required to provide the label_drift list that provides the shift in *x* and *y* axis. The values should be adjusted based on the plausibility of the outcome. 
+
     Examples:
         
-        >>> plot_x2polygons(poly_a, poly_b, save_plot_as = "my_output.svg")
+        >>> plot_x2polygons(poly_a, poly_b, file_path = "C:/Users/banbar/Desktop/out.emf")
+        >>> plot_x2polygons(poly_a, poly_b, with_node_labels = [1, 0.3])
     '''
     fig, ax = plt.subplots()
     
@@ -181,17 +274,7 @@ def plot_x2polygons(poly_a, poly_b, **kwargs):
         inkscape_path = kwargs.get('inkscape', "C://Program Files//Inkscape//bin//inkscape.exe")
         filepath = kwargs.get('file_path', None)
         
-        if filepath is not None:
-            path, filename = os.path.split(filepath)
-            filename, extension = os.path.splitext(filename)
-    
-            svg_filepath = os.path.join(path, filename+'.svg')
-            emf_filepath = os.path.join(path, filename+'.emf')
-    
-            fig.savefig(svg_filepath, format='svg')
-    
-            subprocess.call([inkscape_path, svg_filepath, '--export-filename', emf_filepath])
-            os.remove(svg_filepath)
+        export_as_emf(fig, inkscape_path, filepath)
             
         
 

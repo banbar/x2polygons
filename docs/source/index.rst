@@ -19,8 +19,10 @@ You may install the package by using pip as follows:
    :maxdepth: 2
    :caption: Contents:
 
+   code_geometry
    code_distance_functions
    code_plot
+   
 
 
 Indices and tables

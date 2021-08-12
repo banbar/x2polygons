@@ -26,7 +26,7 @@ else:
         
 setup(
   name='x2polygons',
-  version='0.0.13',
+  version='0.0.15',
   description='A package to find the distance between two polygons',
   long_description=long_description,
   long_description_content_type='text/markdown',  
@@ -40,3 +40,5 @@ setup(
             "x2polygons.tests"],
   install_requires=INSTALL_REQUIRES
 )
+
+# The package may be installed to: C:\Users\banbar\anaconda3\Lib\site-packages
