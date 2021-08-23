@@ -97,7 +97,7 @@ def x2_areas(polygon_test, polygon_ref):
     Returns:
         - **result** (*dict*): Dictionary reporting the three metrics: TP, FP, FN
     
-    .. image:: https://raw.githubusercontent.com/banbar/x2polygons/ae626c5ee9042b710b913099b04693b751274b28/img/area_overlap.png
+    .. image:: https://raw.githubusercontent.com/banbar/x2polygons/main/img/area_overlap.png
        :width: 300px
        :height: 300px
     
