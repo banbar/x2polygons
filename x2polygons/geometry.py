@@ -2,8 +2,6 @@
 """
 This module has the geometry related functions. The outcomes of the functions used in this module can be used to calculate accuracy, F-1 score etc. Therefore, it only aoperates on 1-1 matching building footprints. 
 
-.. image:: https://sublime-and-sphinx-guide.readthedocs.io/en/latest/_images/get_started_sphinx.png
-  :width: 400
 """
 
 import math
@@ -100,8 +98,8 @@ def x2_areas(polygon_ref, polygon_osm):
         - **result** (*dict*): Dictionary reporting the three metrics: TP, FP, FN
     
     .. image:: https://raw.githubusercontent.com/banbar/x2polygons/ae626c5ee9042b710b913099b04693b751274b28/img/area_overlap.png
-    :width: 300px
-    :height: 300px
+       :width: 300px
+       :height: 300px
     
     '''
     
