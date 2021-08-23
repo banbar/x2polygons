@@ -4,7 +4,6 @@ This module has the geometry related functions. The outcomes of the functions us
 
 .. image:: https://sublime-and-sphinx-guide.readthedocs.io/en/latest/_images/get_started_sphinx.png
   :width: 400
-  :alt: Alternative text
 """
 
 import math
@@ -89,7 +88,7 @@ class line_vector:
         return degree
     
 
-def polygon_areas(polygon_ref, polygon_osm):
+def x2_areas(polygon_ref, polygon_osm):
     '''
     Identifies the intersecting area of two input (geopandas) polygons (True Positive, TP), False-Positive (FP, area belonging to OSM but not reference) and False-Negative (FN, area belonging to reference polygon but not OSM). The function operates only on 1-1 matching polygons.
     
@@ -99,7 +98,13 @@ def polygon_areas(polygon_ref, polygon_osm):
             
     Returns:
         - **result** (*dict*): Dictionary reporting the three metrics: TP, FP, FN
+    
+    .. image:: https://sublime-and-sphinx-guide.readthedocs.io/en/latest/_images/get_started_sphinx.png
+    :width: 300
+    
     '''
+    
+    result = {}
     
     result["TP"] = polygon_ref.intersection(polygon_osm).area
     result["FP"] = polygon_osm.area - result["TP"]
