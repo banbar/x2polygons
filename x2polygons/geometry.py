@@ -39,8 +39,8 @@ class line_vector:
     
     Methods:
         - **point_on_where** (self, *px*): Identifies the orientation of the point *px* with respect to the vector. Returns 'LEFT', 'RIGHT' or 'COLINEAR'.
-        - ** length**(self): Returns the length of the vector
-        - **angle_to_vector** (*vx*): Returns the degree between the self vector and the query vector vx.
+        - **length**(self): Returns the length of the vector
+        - **angle_to_vector** (*vx*): Returns the degree between the self vector and the query vector *vx*.
     
    
     """
