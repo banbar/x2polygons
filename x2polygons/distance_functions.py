@@ -3,7 +3,7 @@ This module contains the functions to calculate the distance between two matchin
 
 Use cases:
     The functionality presented in this module could be used to compare reference building datasets with 
-    a VGI dataset such as OSM.
+    another test dataset (e.g. OSM).
     
 Distance Functions:
     - ``Chamfer Distance`` 
@@ -20,12 +20,12 @@ from shapely.geometry import Polygon, Point
 import geopandas as gp
 
 # When packaging & developing:
-# from . import plot as plt
-# from . import geometry as geom
+from . import plot as plt
+from . import geometry as geom
 
 # When creating the documentation
-import plot as plt
-import geometry as geom
+# import plot as plt
+# import geometry as geom
 
 
 
@@ -126,7 +126,7 @@ def hausdorff_distance(polygon_a, polygon_b, **kwargs):
     if('symmetrise' not in kwargs):
         return h_a_b
     elif(kwargs['symmetrise'] == 'min'):
-        return min(h_a_b, h_b_a) # Number of nodes may DIFFER -  OSM may have many nodes on the line - shapes are very similar but Hausdorrf distance is large - if we were optimist, then the H distance could have been zero
+        return min(h_a_b, h_b_a) # Number of nodes may DIFFER - test data (e.g. OSM) may have many nodes on the line - shapes are very similar but Hausdorrf distance is large - if we were optimist, then the H distance could have been zero
     elif(kwargs['symmetrise'] == 'max'):
         return max(h_a_b, h_b_a)
     elif(kwargs['symmetrise'] == 'average'):

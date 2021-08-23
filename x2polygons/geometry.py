@@ -39,7 +39,7 @@ class line_vector:
     
     Methods:
         - **point_on_where** (*px*): Identifies the orientation of the point px with respect to the vector. Returns 'LEFT', 'RIGHT' or 'COLINEAR'.
-        - ** length()**: Returns the length of the vector
+        - ** length**(): Returns the length of the vector
         - **angle_to_vector** (*vx*): Returns the degree between the self vector and the query vector vx.
     
    
@@ -86,13 +86,13 @@ class line_vector:
         return degree
     
 
-def x2_areas(polygon_ref, polygon_osm):
+def x2_areas(polygon_test, polygon_ref):
     '''
-    Identifies the intersecting area of two input (geopandas) polygons (True Positive, TP), False-Positive (FP, area belonging to OSM but not reference) and False-Negative (FN, area belonging to reference polygon but not OSM). The function operates only on 1-1 matching polygons.
+    Identifies the intersecting area of two input (geopandas) polygons (True Positive, TP), False-Positive (FP, area belonging to test (e.g. OSM) but not reference) and False-Negative (FN, area belonging to reference polygon but not test). The function operates only on 1-1 matching polygons.
     
     Args:
+        - **polygon_test** (*polygon*): Test (e.g. OSM) polygon
         - **polygon_ref** (*polygon*): Reference polygon 
-        - **polygon_osm** (*polygon*): OSM (or any other VGI source) polygon
             
     Returns:
         - **result** (*dict*): Dictionary reporting the three metrics: TP, FP, FN
@@ -105,8 +105,8 @@ def x2_areas(polygon_ref, polygon_osm):
     
     result = {}
     
-    result["TP"] = polygon_ref.intersection(polygon_osm).area
-    result["FP"] = polygon_osm.area - result["TP"]
+    result["TP"] = polygon_ref.intersection(polygon_test).area
+    result["FP"] = polygon_test.area - result["TP"]
     result["FN"] = polygon_ref.area - result["TP"]
     
     
