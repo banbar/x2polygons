@@ -64,10 +64,16 @@ class TestGeometry(unittest.TestCase):
         
         self.assertEqual(polygon_perimeter(self.p1), 20)
         self.assertEqual(polygon_perimeter(self.p2), 22)
+    
+        
+    def test_Area(self):
+        #setUp() function will work
+        # So, we have self.emp_1
+        print("test x2 Area")
+        
+        self.assertEqual(x2_areas(self.p1, self.p2)["TP"], 25)
         
         
-        #self.assertEqual(chamfer_distance(self.p2, self.p1, symmetrize = "number_of_nodes"), (10+2*math.sqrt(125)) / (2*8))
-
         
 if __name__ == '__main__':
     unittest.main()
