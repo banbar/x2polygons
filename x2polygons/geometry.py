@@ -64,6 +64,9 @@ class line_vector:
         # Find the determinant - Right hand rule
         result = v1.x*v2.y - v1.y*v2.x
         
+        # Round the float - we may see error in floating point arithmetic
+        result = round(result, 3)
+        
         if(result > 0):
             return 'LEFT' # yes, px is on the LEFT hand-side of the line
         elif (result < 0):
@@ -79,6 +82,9 @@ class line_vector:
 
         # https://onlinemschool.com/math/library/vector/angl/#:~:text=Definition.,Basic%20relation.
         cos_alpha = ( (self.p2.x-self.p1.x)*(vx.p2.x - vx.p1.x) + (self.p2.y-self.p1.y)*(vx.p2.y - vx.p1.y)) / (self.length()*vx.length()) 
+        
+        # Round the float - we may see error in floating point arithmetic
+        cos_alpha = round(cos_alpha, 3)
         
         radian = math.acos(cos_alpha)
         degree = math.degrees(radian) # convert radian to degrees

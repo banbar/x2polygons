@@ -3,4 +3,5 @@ This Python package allows calculation of distance between two polygons. The ava
 Available distance functions are:
 * Hausdorff distance
 * Chamfer distance
+* PoLis distance
 * Turn function distance

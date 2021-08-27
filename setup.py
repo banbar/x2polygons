@@ -26,7 +26,7 @@ else:
         
 setup(
   name='x2polygons',
-  version='0.0.16',
+  version='0.0.17',
   description='A package to find the distance between two polygons',
   long_description=long_description,
   long_description_content_type='text/markdown',  
