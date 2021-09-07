@@ -20,7 +20,8 @@ You may install the package by using pip as follows:
    :caption: Contents:
 
    code_geometry
-   code_distance_functions
+   code_polygon_distance
+   code_thematic_distance
    code_plot
    
 

@@ -1,5 +1,5 @@
 Distance Functions Module
 =========================
 
-.. automodule:: distance_functions
+.. automodule:: thematic_distance
    :members:
