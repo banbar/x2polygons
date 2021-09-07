@@ -16,8 +16,9 @@ testdir = os.path.dirname(__file__)
 srcdir = '../../'
 sys.path.insert(0, os.path.abspath(os.path.join(testdir, srcdir)))
 
-from x2polygons.distance_functions import * 
+from x2polygons.polygon_distance import * 
 from x2polygons.plot import *
+from x2polygons.geometry import *
 
 # -------------------------------
 # 1.
@@ -36,7 +37,7 @@ from x2polygons.plot import *
    # and AFTER EVERYTHING
 
 import math
-class TestDistanceMetrics(unittest.TestCase):
+class TestPolygonDistance(unittest.TestCase):
    
     
     

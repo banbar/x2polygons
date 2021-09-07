@@ -309,7 +309,7 @@ def turn_function(polygon, **kwargs):
     if( round(sum(turn["angles"])) == -360):
         turn['digitisation_direction'] = 'CW' 
         if ('ccw' in kwargs):
-            v_init = line_vector(points[-1], points[-2])
+            v_init = geom.line_vector(points[-1], points[-2])
             
             turn['angles'] = []
             turn['lengths'] = []
