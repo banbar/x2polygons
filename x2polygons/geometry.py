@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-This module has the geometry related functions. The outcomes of the functions used in this module can be used to calculate accuracy, F-1 score etc. Therefore, it only aoperates on 1-1 matching building footprints. 
+This module has the geometry related functions. The outcomes of the functions used in this module can be used to calculate accuracy, F-1 score etc. Therefore, it only operates on 1-1 matching building footprints. 
 
 """
 
