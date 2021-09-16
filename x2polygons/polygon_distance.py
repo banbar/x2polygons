@@ -196,9 +196,6 @@ def polis_distance(polygon_a, polygon_b, **kwargs):
     elif(kwargs['symmetrise'] == 'min'):
         return min(polis_a_b, polis_b_a)
 
-    
-
-
 
 def turn_function(polygon, **kwargs):
     '''

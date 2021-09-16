@@ -136,6 +136,26 @@ def polygon_vertices(polygon):
         point_list.append([pointsx[q],pointsy[q]])
     return point_list
 
+def max_edge_length(polygon):
+    '''
+    Returns the length of the longest edge . 
+    
+    Args:
+        - **polygon** (*polygon*): A polygon object
+
+    Returns:
+        - **length** (*float*):  The length of the longest edge.   
+    '''
+    
+    list1 = polygon_vertices(polygon) # Obtain the vertices of the polygon 
+    dist = []
+    for i in range(len(list1)): # Iterate over all edges
+        if i != len(list1)-1:
+            dist.append(((list1[i][0]-list1[i+1][0])**2 + (list1[i][1]-list1[i+1][1])**2)**0.5) # Calculate length of the edges
+    
+    return max(dist) # The length of the longest edge 
+
+
 def polygon_perimeter(polygon):
     '''
     Returns the perimeter of a polygon. 
@@ -161,4 +181,55 @@ def polygon_perimeter(polygon):
         perimeter += edge.length()
         
     return perimeter
+
+def perimeter_ratio(test_polygon, ref_polygon):
+    '''
+    Returns the ratio of the perimeters of the input polygons: perimeter(test_polygon) / perimeter(ref_polygon). The input polygons are supposed to match.  
+    
+    Args:
+        - **test_polygon** (*polygon*): The test polygon object.
+        - **ref_polygon** (*polygon*): The reference polygon object.
+
+    Returns:
+        - **ratio** (*float*):  The ratio of the perimeter of the test polygon over the reference polygon. 
+    '''
+    return polygon_perimeter(test_polygon) / polygon_perimeter(ref_polygon)
+
+def overlap_percent(test_polygon, ref_polygon):
+    '''
+    Calculates the percentage of overlapping region of two matching polygons to the area of smaller-sized polygon. This needs to be calculated when the matching criterion is two-way area overlap (TWAO) method.  
+    
+    Args:
+        - **test_polygon** (*polygon*): The test polygon object.
+        - **ref_polygon** (*polygon*): The reference polygon object.
+
+    Returns:
+        - **ratio** (*float*): area_overlap / min( area(test_polygon), area(ref_polygon) ).
+    '''
+    
+    overlapping_area = test_polygon.intersection(ref_polygon).area # Calculate overlapping area by m^2
+    
+    min_area = min(test_polygon.area, ref_polygon.area) # Calculate total area by m^2
+    
+    overlap_ratio = overlapping_area / min_area # Calculate the ratio between overlapping area and total area
+    
+    return (overlap_ratio*100) 
+
+def centroid_distance(test_data, ref_data):
+    '''
+    Calculates the distance between the centroids of input polygons. The input polygons are supposed to match.
+    
+    Args:
+        - **test_polygon** (*polygon*): The test polygon object.
+        - **ref_polygon** (*polygon*): The reference polygon object.
+
+    Returns:
+        - **distance** (*float*): The Euclidean distance between the input polygons. 
+    '''
+    centroid1 = [test_data.centroid.x, test_data.centroid.y]
+    centroid2 = [ref_data.centroid.x, ref_data.centroid.y]
+    
+    return ((centroid1[0] - centroid2[0])**2 + (centroid1[1] - centroid2[1])**2)**0.5
+
+
 
