@@ -38,7 +38,7 @@ def chamfer_distance(polygon_a, polygon_b, **kwargs):
         - **polygon_a** (*polygon*): First polygon
         - **polygon_b** (*polygon*): Second polygon
         - **kwargs**:
-            - symmetrise: How to symmetrise the distance measure as there would be two distances (i.e. a->b, b->a). Options are: *'min'*, *'max'*, *'w_avg'*. The *w_avg* (weighted average) option is calculated by considering the number of nodes of each polygon as described `here <https://ieeexplore.ieee.org/document/6849454>`_.
+            - symmetrise: How to symmetrise the distance measure as there would be two distances (i.e. a->b, b->a). Options are: *'min'*, *'max'*, *'average'*. The *average* (weighted average) option is calculated by considering the number of nodes of each polygon as described `here <https://ieeexplore.ieee.org/document/6849454>`_.
             
     Returns:
         - **distance** (*float*): Chamfer distance between the polygons
@@ -70,7 +70,7 @@ def chamfer_distance(polygon_a, polygon_b, **kwargs):
     # Default: c_a_b
     if('symmetrise' not in kwargs):
         return c_a_b
-    elif(kwargs['symmetrise'] == 'w_avg'):
+    elif(kwargs['symmetrise'] == 'average'):
         return ( (c_a_b / (2* (len(vertices_a)-1)) ) + (c_b_a / (2* (len(vertices_b)-1)) ) )
     elif(kwargs['symmetrise'] == 'min'):
         return min(c_a_b, c_b_a)

@@ -72,7 +72,6 @@ class TestPolygonDistance(unittest.TestCase):
         
         self.p6 = Polygon([(1,1), (4,1), (6,3),  (8,5), (4,6), (8,8), (3,8), (2,7), (1,7), (1,1)])
         self.p6_shifted = Polygon([(2,2), (5,2), (9,6), (5,7), (9,9), (4,9), (3,8), (2,8), (2,2)])
-        self.p6_kadir = Polygon([(2,7), (3,8), (8,8), (4,6), (8,5), (4,1), (1,1), (1,7), (2,7)])
         
         
     
@@ -130,7 +129,7 @@ class TestPolygonDistance(unittest.TestCase):
         # self.assertEqual(round(sum(turn_function(self.p2, plot = True)["angles"])), 360)
         
         self.assertEqual(round(sum(turn_function(self.p6)["angles"])), 360)
-        self.assertEqual(round(sum(turn_function(self.p6_kadir, ccw = True)["angles"])), 360)
+
         
         
     def test_distance_between_turn_functions(self):
@@ -142,8 +141,18 @@ class TestPolygonDistance(unittest.TestCase):
         
         p6_turn = turn_function(self.p6, plot=True, ccw=True)
         # p6_shifted_turn = turn_function(self.p6_shifted, ccw=True)
-        p6_kadir_turn = turn_function(self.p6_kadir, plot=True, ccw=True)
-        self.assertEqual(distance_between_turn_functions(p6_turn, p6_kadir_turn)["total_distance"], 0)
+        
+        
+        self.assertEqual(turn_function_distance(self.p1, self.p1_scaled, ccw = True), 0)
+        self.assertEqual(turn_function_distance(self.p1, self.p1_cw, ccw = True), 0)
+        self.assertEqual(turn_function_distance(self.p1, self.p1_more_vertex, ccw = True), 0)
+        self.assertEqual(turn_function_distance(self.p1, self.p1_more_vertex_different_start, ccw = True), 0)
+        
+        self.assertEqual(turn_function_distance(self.p5, self.p5_different_start, ccw = True), 0)
+        
+        self.assertEqual(turn_function_distance(self.p6, self.p6_shifted, ccw = True), 0)
+        
+        
         
 if __name__ == '__main__':
     unittest.main()
