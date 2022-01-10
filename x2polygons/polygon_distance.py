@@ -20,12 +20,12 @@ from shapely.geometry import Polygon, Point
 import geopandas as gp
 
 # When packaging & developing:
-# from . import plot as plt
-# from . import geometry as geom
+from . import plot as plt
+from . import geometry as geom
 
 # When creating the documentation
-import plot as plt
-import geometry as geom
+# import plot as plt
+# import geometry as geom
 
 
 
@@ -291,7 +291,8 @@ def turn_function(polygon, **kwargs):
         turn["lengths"][i] += turn["lengths"][0]
                     
     # Reorganise the turn function 
-    sorted_indecies_to_delete = sorted(indices_to_delete, reverse=True)
+    # !!!! UPDATE - correct typo
+    indices_to_delete = sorted(indices_to_delete, reverse=True)
     
     if(len(indices_to_delete) > 0):
         for i in (indices_to_delete):
@@ -306,6 +307,7 @@ def turn_function(polygon, **kwargs):
     if( round(sum(turn["angles"])) == -360):
         turn['digitisation_direction'] = 'CW' 
         if ('ccw' in kwargs):
+            turn['digitisation_direction'] = 'CCW' 
             v_init = geom.line_vector(points[-1], points[-2])
             
             turn['angles'] = []
@@ -576,7 +578,7 @@ def distance_between_turn_functions(a_turn, b_turn):
                 index_b = k-1
                 break
         
-        total_distance += abs(min_distance_snapshot["a"]["angles"][index_a] - min_distance_snapshot["b"]["angles"][index_b]) + abs(min_distance_snapshot["a"]["lengths"][index_a] - min_distance_snapshot["b"]["lengths"][index_b])
+        total_distance += math.sqrt(abs(min_distance_snapshot["a"]["angles"][index_a] - min_distance_snapshot["b"]["angles"][index_b])**2 + abs(min_distance_snapshot["a"]["lengths"][index_a] - min_distance_snapshot["b"]["lengths"][index_b])**2)
  
     
     min_distance_snapshot["total_distance"] = total_distance
@@ -586,13 +588,23 @@ def distance_between_turn_functions(a_turn, b_turn):
     return min_distance_snapshot
 
 def turn_function_distance(p1, p2, **kwargs):
-    # Obtain the turn functions
-    if('ccw' in kwargs):
-        p1_turn = turn_function(p1, ccw = kwargs["ccw"])
-        p2_turn = turn_function(p2, ccw = kwargs["ccw"])
-    else:
-        p1_turn = turn_function(p1)
-        p2_turn = turn_function(p2)
+    '''
+    Identifies the Turn Function Distance between two input polygons. This is a symmetric measure.
+    
+    Args:
+        - **polygon_a** (*polygon*): First polygon
+        - **polygon_b** (*polygon*): Second polygon
+        
+    Returns:
+        - **distance** (*float*): Turn function distance between the polygons.
+    '''
+    
+    p1_turn = turn_function(p1)
+    p2_turn = turn_function(p2)
+    
+    if(p1_turn["digitisation_direction"] != p2_turn["digitisation_direction"]):
+        p1_turn = turn_function(p1, ccw=True)
+        p2_turn = turn_function(p2, ccw=True)
     
     return distance_between_turn_functions(p1_turn, p2_turn)["total_distance"]
 
