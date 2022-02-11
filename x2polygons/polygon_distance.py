@@ -20,12 +20,12 @@ from shapely.geometry import Polygon, Point
 import geopandas as gp
 
 # When packaging & developing:
-from . import plot as plt
-from . import geometry as geom
+# from . import plot as plt
+# from . import geometry as geom
 
 # When creating the documentation
-# import plot as plt
-# import geometry as geom
+import plot as plt
+import geometry as geom
 
 
 
@@ -197,9 +197,9 @@ def polis_distance(polygon_a, polygon_b, **kwargs):
         return min(polis_a_b, polis_b_a)
 
 
-def turn_function(polygon, **kwargs):
+def turning_function(polygon, **kwargs):
     '''
-    Identifies the turn function of an input polygon. 
+    Identifies the turning function of an input polygon. 
     
     Args:
         - **polygon** (*polygon*): The input polygon
@@ -382,68 +382,25 @@ def turn_function(polygon, **kwargs):
                     del turn["angles"][i]
     
     if ('plot' in kwargs):
-        plt.plot_turn_function(turn)
+        plt.plot_turning_function(turn)
         
     return turn
 
 
-
-def distance_between_turn_functions(a_turn, b_turn):
-    '''
-    Calculates the distance between two turn functions. 
-    
-    Args:
-        - **a_turn** (*dict*): First polygon's turn function as provided by the *turn_function(polygon_a)*.
-        - **b_turn** (*dict*): Second polygon's turn function as provided by the *turn_function(polygon_b)*.
-    
-    Returns:
-        - **dict**: A dictionary containing the following attributes:
-            - **a** (*dict*): aligned turn function of polygon a
-            - **b** (*dict*): aligned turn function of polygon b
-            - **distance** (*float*): turn function distance between the polygons
-            - **piece_wise_a** (*float []*): piece wise lengths of polygon a
-            - **piece_wise_b** (*float []*): piece wise lengths of polygon b
-            - **combined_piece_wise** (*float []*): combined piece wise lengths of two polygons
-    Notes:
-        - Alignment step is carried out to make sure that the start point of the polygons do not make a difference.
-        
-        
-
-    '''   
+def coincide_turning_functions(a_turn, b_turn):
     # Notes:
-        # Number of edges may differ between two polygons
+    # Number of edges may differ between two polygons
     #1. Align the turn angles so that the distance is minimum
     # - We may start from different nodes, the node numbers may be different etc.
     # pop & append
     distances = []
     min_distance = 10**10
-    
-    # Normalise the angles
-    # Round the float - we may see error in floating point arithmetic
-    total_angle = sum(a_turn["angles"]) # must be 360
-    for i in range(len(a_turn["angles"])):
-        a_turn["angles"][i] = round((a_turn["angles"][i] / total_angle), 3)
-    
-    for i in range(len(b_turn["angles"])):
-        b_turn["angles"][i] = round((b_turn["angles"][i] / total_angle), 3)
-    
-    # Round the lengths
-    for i in range(len(a_turn["lengths"])):
-        a_turn["lengths"][i] = round(a_turn["lengths"][i], 3)
-    
-    for i in range(len(b_turn["lengths"])):
-        b_turn["lengths"][i] = round(b_turn["lengths"][i], 3)
-        
-    
-    
-    
-    
+    # SHIFT Polygon A: ----------------------------------------- 
     piece_wise_lengths = {} 
     piece_wise_lengths["b"] = [0]*(len(b_turn["lengths"])+1)
     for i in range(1, len(b_turn["lengths"])+1):
         piece_wise_lengths["b"][i] = piece_wise_lengths["b"][i-1] + b_turn["lengths"][i-1]
-        
-    # SHIFT Polygon A: -----------------------------------------    
+    
     for shift in range(len(a_turn["lengths"])):     
         piece_wise_lengths["a"] = [0]*(len(a_turn["lengths"])+1)
         for i in range(1, len(a_turn["lengths"])+1):
@@ -501,9 +458,9 @@ def distance_between_turn_functions(a_turn, b_turn):
     
     piece_wise_lengths = {} 
     piece_wise_lengths["a"] = [0]*(len(a_turn["lengths"])+1)
-    
     for i in range(1, len(a_turn["lengths"])+1):
         piece_wise_lengths["a"][i] = piece_wise_lengths["a"][i-1] + a_turn["lengths"][i-1]
+        
         
     for shift in range(len(b_turn["lengths"])):     
         piece_wise_lengths["b"] = [0]*(len(b_turn["lengths"])+1)
@@ -558,8 +515,19 @@ def distance_between_turn_functions(a_turn, b_turn):
         length = b_turn["lengths"].pop(0)
         b_turn["angles"].append(angle)
         b_turn["lengths"].append(length)
+        
+    return min_distance_snapshot
+
+def convert_normalised_angles_back(angles):
+    real_angles = []
+    for i in range(len(angles)):
+        real_angles.append(angles[i]*360)
+    return real_angles
     
-    # Calculate the total distance of the min_distance_snapshot
+    
+
+def calculate_distance_min_distance_snaphot(min_distance_snapshot):
+     # Calculate the total distance of the min_distance_snapshot
     index_a = 1
     index_b = 1
     total_distance = 0
@@ -582,30 +550,110 @@ def distance_between_turn_functions(a_turn, b_turn):
  
     
     min_distance_snapshot["total_distance"] = total_distance
-        
-        
     
     return min_distance_snapshot
+    
+    
+def normalise_turn_function(a_turn):
+    # Normalise the angles
+    # Round the float - we may see error in floating point arithmetic
+    total_angle = sum(a_turn["angles"]) # must be 360 - NOT always due to floating point arithmetic
+    for i in range(len(a_turn["angles"])):
+        a_turn["angles"][i] = round((a_turn["angles"][i] / total_angle), 3)
+    
+    # Round the lengths
+    for i in range(len(a_turn["lengths"])):
+        a_turn["lengths"][i] = round(a_turn["lengths"][i], 3)
+    
+    return a_turn
 
-def turn_function_distance(p1, p2, **kwargs):
+def switch_to_cw(list_to_convert):
+    converted = list(reversed((list_to_convert)))
+    popped = converted.pop(0)
+    converted.append(popped)
+    
+    return converted
+
+def turning_function_distance(polygon_a, polygon_b):
     '''
-    Identifies the Turn Function Distance between two input polygons. This is a symmetric measure.
+    Calculates the distance between two turn functions. 
     
     Args:
-        - **polygon_a** (*polygon*): First polygon
-        - **polygon_b** (*polygon*): Second polygon
-        
+        - **a_turn** (*dict*): First polygon's turn function as provided by the *turning_function(polygon_a)*.
+        - **b_turn** (*dict*): Second polygon's turn function as provided by the *turning_function(polygon_b)*.
+    
     Returns:
-        - **distance** (*float*): Turn function distance between the polygons.
-    '''
+        - **dict**: A dictionary containing the following attributes:
+            - **a** (*dict*): aligned turn function of polygon a
+            - **b** (*dict*): aligned turn function of polygon b
+            - **distance** (*float*): turn function distance between the polygons
+            - **piece_wise_a** (*float []*): piece wise lengths of polygon a
+            - **piece_wise_b** (*float []*): piece wise lengths of polygon b
+            - **combined_piece_wise** (*float []*): combined piece wise lengths of two polygons
+    Notes:
+        - Alignment step is carried out to make sure that the start point of the polygons do not make a difference.
+        
+        
+
+    '''   
+    a_turn = turning_function(polygon_a, ccw=True)
+    b_turn = turning_function(polygon_b, ccw=True)
+
     
-    p1_turn = turn_function(p1)
-    p2_turn = turn_function(p2)
+    a_turn = normalise_turn_function(a_turn)
+    b_turn = normalise_turn_function(b_turn)
     
-    if(p1_turn["digitisation_direction"] != p2_turn["digitisation_direction"]):
-        p1_turn = turn_function(p1, ccw=True)
-        p2_turn = turn_function(p2, ccw=True)
+
+    # Assumed CCW=TRUE - but a SUBTLY different turn function occurs had CCW=TRUE been ignored
+    #Assumption: Both turn functions are created with CCW=True
+    min_distance_snapshot_ccw = coincide_turning_functions(a_turn, b_turn)
     
-    return distance_between_turn_functions(p1_turn, p2_turn)["total_distance"]
+        
+    # SHIFT Lengths to Next (+1) & switch the sign of the angles
+    # Shift the lengths
+    tmp = a_turn["lengths"][0]
+    a_turn["lengths"][0] = a_turn["lengths"][-1]
+    for i in range(1, len(a_turn["lengths"])):
+        tmp_current = a_turn["lengths"][i]
+        a_turn["lengths"][i] = tmp
+        tmp = tmp_current
+
+    tmp =b_turn["lengths"][0]
+    b_turn["lengths"][0] = b_turn["lengths"][-1]
+    for i in range(1, len(b_turn["lengths"])):
+        tmp_current = b_turn["lengths"][i]
+        b_turn["lengths"][i] = tmp
+        tmp = tmp_current
+
+    # Switch the sign of the angles
+    for i in range(len(a_turn["angles"])):
+        a_turn["angles"][i] = a_turn["angles"][i] * -1
+    
+    for i in range(len(b_turn["angles"])):
+        b_turn["angles"][i] = b_turn["angles"][i] * -1
+    
+    # Complete the reverse operation - start from one before last, move upwards
+    # From CCW -> to -> CW
+    a_turn["angles"] = switch_to_cw(a_turn["angles"])
+    a_turn["lengths"] = switch_to_cw(a_turn["lengths"])
+    
+    b_turn["angles"] = switch_to_cw(b_turn["angles"])
+    b_turn["lengths"] = switch_to_cw(b_turn["lengths"])
+    
+    
+   
+    
+    # Had the turn function obtained in the other direction
+    min_distance_snapshot_cw = coincide_turning_functions(a_turn, b_turn)
+    
+    m1 = calculate_distance_min_distance_snaphot(min_distance_snapshot_ccw)
+    m2 = calculate_distance_min_distance_snaphot(min_distance_snapshot_cw)
+    if(m1["total_distance"] < m2["total_distance"]):
+        return m1["total_distance"]
+    else:
+        return m2["total_distance"]
+    
+
+
 
     

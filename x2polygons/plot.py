@@ -32,7 +32,7 @@ def export_as_emf(fig, inkscape_path, file_path):
     subprocess.call([inkscape_path, svg_filepath, '--export-filename', emf_filepath])
     os.remove(svg_filepath)
 
-def plot_turn_function(turn, **kwargs):  
+def plot_turning_function(turn, **kwargs):  
     '''
     Plots the cumulative length turn function. 
     
@@ -75,8 +75,9 @@ def plot_turn_function(turn, **kwargs):
     plt.ylabel("Turn angles", fontsize=14)
     
     if('edge_labels' in kwargs):
-        # Plot the edge labels on top of the turn function
-        # First digitised node starts with a and then continues alphabetically
+        # Assumption: First digitised node is labelled with "a" and then continues alphabetically
+        # Generate the edge labels
+        
         edge_labels = []
         node_a = "b" # the next label
         
@@ -102,16 +103,13 @@ def plot_turn_function(turn, **kwargs):
         label = "ab"
         edge_labels.append([first_edge_x, cum_sum_angles[i+2], label])
         
-    
-        # #override_labels in case of manual plotting
-        # edge_labels[0][2] = "gf"
-        # edge_labels[1][2] = "fe"
-        # edge_labels[2][2] = "ed"
-        # edge_labels[3][2] = "dc"
-        # edge_labels[4][2] = "cb"
-        # edge_labels[5][2] = "ba"
-        # edge_labels[6][2] = "ag"
-        
+        if(type(kwargs['edge_labels']) == list):
+           # Edge labels are provided as an input
+           # Override the default labels
+           for i in range(len(kwargs['edge_labels'])):
+               edge_labels[i][2] = kwargs['edge_labels'][i]
+               
+            
         
         # Print the edge labels
         # Shift the x position a little towards left to center the piecewise unit - one character
@@ -239,8 +237,15 @@ def plot_x2polygons(poly_a, poly_b, **kwargs):
         
         # For polygon A
         for i in range(len(poly_a.exterior.coords)-1):
-            x_val = str(int(poly_a.exterior.coords[i][0]))
-            y_val = str(int(poly_a.exterior.coords[i][1]))
+            if( (int(poly_a.exterior.coords[i][0]) - poly_a.exterior.coords[i][0] ) != 0):
+                x_val = str(poly_a.exterior.coords[i][0])
+            else:
+                x_val = str(int(poly_a.exterior.coords[i][0])) # for better visualisation
+            
+            if( (int(poly_a.exterior.coords[i][1]) - poly_a.exterior.coords[i][1] ) != 0):
+                y_val = str(poly_a.exterior.coords[i][1])
+            else:
+                y_val = str(int(poly_a.exterior.coords[i][1]))
             
             node_label = 'a' + str(i) + "(" + x_val + "," + y_val + ")"  
             ax.text(poly_a.exterior.coords[i][0]-label_drift[0], poly_a.exterior.coords[i][1]-label_drift[0], 
@@ -252,8 +257,15 @@ def plot_x2polygons(poly_a, poly_b, **kwargs):
         # For Polygon B
         for i in range(len(poly_b.exterior.coords)-1):
             # If a node B coincides with a node from A, skip its coordinates
-            x_val = str(int(poly_b.exterior.coords[i][0]))
-            y_val = str(int(poly_b.exterior.coords[i][1]))
+            if( (int(poly_b.exterior.coords[i][0]) - poly_b.exterior.coords[i][0] ) != 0):
+                x_val = str(poly_b.exterior.coords[i][0])
+            else:
+                x_val = str(int(poly_b.exterior.coords[i][0]))
+            
+            if( (int(poly_b.exterior.coords[i][1]) - poly_b.exterior.coords[i][1] ) != 0):
+                y_val = str(poly_b.exterior.coords[i][1])
+            else:
+                y_val = str(int(poly_b.exterior.coords[i][1]))
             
             node_tmp = (poly_b.exterior.coords[i][0], poly_b.exterior.coords[i][1])
             if (node_tmp in save_nodes):
