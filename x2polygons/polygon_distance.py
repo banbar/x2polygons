@@ -20,12 +20,12 @@ from shapely.geometry import Polygon, Point
 import geopandas as gp
 
 # When packaging & developing:
-from . import plot as plt
-from . import geometry as geom
+#from . import plot as plt
+#from . import geometry as geom
 
 # When creating the documentation
-# import plot as plt
-# import geometry as geom
+import plot as plt
+import geometry as geom
 
 
 
